@@ -100,7 +100,7 @@ function createTree(node, level){
         const flexString = getTailWindClasses(values);
 
         //if the thing is an image we use placeholder api for that
-        if(node.fills.length > 1){
+        if(node.fills.length >= 1){
             if(node.fills[0].type == "IMAGE"){
                 let imgH = node.height;
                 let imgW = node.width;
@@ -158,7 +158,7 @@ function createTree(node, level){
     }
     else {
 
-        if(node.fills.length > 1){
+        if(node.fills.length >= 1){
             if(node.fills[0].type == "IMAGE"){
                 let imgH = node.height;
                 let imgW = node.width;
