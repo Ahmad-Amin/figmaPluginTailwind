@@ -4,12 +4,18 @@ let changedBreakpoints = {
 let addedCustomClasses = {
     //map for plain normal classes -- keys -> {node ids}, values -> {added custom classes from the UI}
 } 
+let addedNewCustomCSS = {
+    //map for plain normal classes -- keys -> {node ids}, values -> {added custom CSS from the UI}
+}
 let addedTagName = {
     //map for tag names -- keys -> {node ids}, values -> {added tag name from the UI}
 }
 let addedCustomInteractions = {
     //map for plain Custom Interactions -- keys -> {node ids}, values -> {added custom Interactions from the UI}
 }
+
+
+
 //function for iterating over a map and finding the respective node's data in that map
 function iter(obj, node){
     if(!node) return {};
@@ -182,14 +188,56 @@ function addTagName(node){
     }
 }
 
+
+function addNewCustomCSS(node){
+    const obj = iter(addedNewCustomCSS, node);
+    const newCustomCSS = obj.classes;
+    const key = obj.key;
+    if(key){
+        if(!node.name.includes('!*')){
+            if(node.name.includes('{')){
+                if(node.name.includes('(')){
+                    if(node.name.includes('[')){
+                        if(node.name.includes('<')){
+                            node.name += `!*${newCustomCSS}*!`;
+                        }else{
+                            node.name += `<>!*${newCustomCSS}*!`;
+                        }
+                    }else{
+                        node.name += `[]<>!*${newCustomCSS}*!`;
+                    }
+                }else{
+                    node.name += `()[]<>!*${newCustomCSS}*!`;
+                }
+            }else{
+                node.name += `{}()[]<>!*${newCustomCSS}*!`;
+            }
+        }else{
+            let nameArr = node.name.split('');
+            let cutCount = nameArr.slice(nameArr.indexOf('!*')+2, nameArr.indexOf('*!')).length;
+            nameArr.splice(nameArr.indexOf('!*')+2, cutCount);
+            let convString = nameArr.join('').replace('*!', `${newCustomCSS}*!`);
+            node.name = convString;
+        }
+        return newCustomCSS;
+    }else{
+        if(!node.name.includes('!*')){
+            node.name += ``;
+        }
+        return '';
+    }
+}
+
 module.exports = {
     addBreakpointsClasses,
     addCustomClasses,
+    addNewCustomCSS,
     addCustomInteractions,
     addTagName,
     iter,
     changedBreakpoints,
     addedCustomClasses,
+    addedNewCustomCSS,
     addedCustomInteractions,
     addedTagName
 }
