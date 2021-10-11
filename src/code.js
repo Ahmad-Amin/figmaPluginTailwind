@@ -237,36 +237,38 @@ figma.on('run', () => {
         if(el.name.indexOf('(')>-1){ //breakpoints
             breakpointString = el.name.slice(el.name.indexOf('(')+1, el.name.indexOf(')'));
             //here we have 'sm:flex sm:flex-col' tec
-            let breakpointsArr = breakpointString.split(' ');
-            //here we have an array of indi classes
-            breakpointsObj = {
-                sm:'',md:'',lg:'',xl:'',_2xl:'',
-            }
-            breakpointsArr.forEach(e => { //e => class
-                let splitWord = e.split(':')
-                let cut = splitWord[0];
-                let className = splitWord[1];
-                switch(cut){
-                    case 'sm':
-                        breakpointsObj.sm += breakpointsObj.sm?breakpointsObj.sm+=className:className;
-                        break;
-                    case 'md':
-                        breakpointsObj.md += className;
-                        break;
-                    case 'lg':
-                        breakpointsObj.lg += className;
-                        break;
-                    case 'xl':
-                        breakpointsObj.xl += className;
-                        break;
-                    case'2xl':
-                        breakpointsObj._2xl += className;
-                        break;
+            if(breakpointString.trim().length > 0){
+                let breakpointsArr = breakpointString.split(' ');
+                //here we have an array of indi classes
+                breakpointsObj = {
+                    sm:'',md:'',lg:'',xl:'',_2xl:'',
                 }
-            })
-            //adding to the breakpoints map in case the breakpoints are not present beforeh
-            breakpoints = breakpointsObj; 
-            changedBreakpoints[el.id] = breakpointsObj; 
+                breakpointsArr.forEach(e => { //e => class
+                    let splitWord = e.split(':')
+                    let cut = splitWord[0];
+                    let className = splitWord[1];
+                    switch(cut){
+                        case 'sm':
+                            breakpointsObj.sm += breakpointsObj.sm?breakpointsObj.sm+=className:className;
+                            break;
+                        case 'md':
+                            breakpointsObj.md += className;
+                            break;
+                        case 'lg':
+                            breakpointsObj.lg += className;
+                            break;
+                        case 'xl':
+                            breakpointsObj.xl += className;
+                            break;
+                        case'2xl':
+                            breakpointsObj._2xl += className;
+                            break;
+                    }
+                })
+                //adding to the breakpoints map in case the breakpoints are not present beforeh
+                breakpoints = breakpointsObj; 
+                changedBreakpoints[el.id] = breakpointsObj; 
+            }
         }
         if(el.name.indexOf('[')>-1){
             customClassesString = el.name.slice(el.name.indexOf('[')+1, el.name.indexOf(']'));
@@ -354,7 +356,7 @@ figma.on('run', () => {
 
     //for sending the added custom css as styling (from the UI) back to the UI on selection change
     if(selectedItem.name.indexOf('!*') > -1){
-        customCssString = selectedItem.name.slice(selectedItem.name.indexOf('!*')+2, selectedItem.name.indexOf('*1'));
+        customCssString = selectedItem.name.slice(selectedItem.name.indexOf('!*')+2, selectedItem.name.indexOf('*!'));
         addedCustomCss[selectedItemID] = customCssString;
         customCss = customCssString;
     }else{
@@ -422,38 +424,40 @@ figma.on('selectionchange', () => {
     if(selectedItem.name.indexOf('(')>-1){
         breakpointString = selectedItem.name.slice(selectedItem.name.indexOf('(')+1, selectedItem.name.indexOf(')'));
         //here we have 'sm:flex sm:flex-col' tec
-        let breakpointsArr = breakpointString.split(' ');
-        //here we have an array of indi classes
-        breakpointsObj = {
-            sm:'',md:'',lg:'',xl:'',_2xl:'',
-        }
-        breakpointsArr.forEach(e => { //e => class
-            let splitWord = e.split(':')
-            let cut = splitWord[0];
-            let className = splitWord[1];
-            switch(cut){
-                case 'sm':
-                    breakpointsObj.sm += breakpointsObj.sm?breakpointsObj.sm+=className:className;
-                    break;
-                case 'md':
-                    breakpointsObj.md += className;
-                    break;
-                case 'lg':
-                    breakpointsObj.lg += className;
-                    break;
-                case 'xl':
-                    breakpointsObj.xl += className;
-                    break;
-                case'2xl':
-                    breakpointsObj._2xl += className;
-                    break;
+        if(breakpointString.trim().length > 0){
+            let breakpointsArr = breakpointString.split(' ');
+            //here we have an array of indi classes
+            breakpointsObj = {
+                sm:'',md:'',lg:'',xl:'',_2xl:'',
             }
-        })
-        // code = figmaToTailwind(selectedItem)
+            breakpointsArr.forEach(e => { //e => class
+                let splitWord = e.split(':')
+                let cut = splitWord[0];
+                let className = splitWord[1];
+                switch(cut){
+                    case 'sm':
+                        breakpointsObj.sm += breakpointsObj.sm ? breakpointsObj.sm += className:className;
+                        break;
+                    case 'md':
+                        breakpointsObj.md += className;
+                        break;
+                    case 'lg':
+                        breakpointsObj.lg += className;
+                        break;
+                    case 'xl':
+                        breakpointsObj.xl += className;
+                        break;
+                    case'2xl':
+                        breakpointsObj._2xl += className;
+                        break;
+                }
+            })
+            // code = figmaToTailwind(selectedItem)
 
-        //adding to the breakpoints map in case the breakpoints are not present beforeh
-        breakpoints = breakpointsObj; 
-        changedBreakpoints[selectedItemID] = breakpointsObj;
+            //adding to the breakpoints map in case the breakpoints are not present beforeh
+            breakpoints = breakpointsObj; 
+            changedBreakpoints[selectedItemID] = breakpointsObj;
+        }
     }else{
         breakpointsObj = iter(changedBreakpoints, figma.currentPage.selection[0]?figma.currentPage.selection[0]:{})
         breakpoints = breakpointsObj.classes;   
@@ -493,7 +497,6 @@ figma.on('selectionchange', () => {
     //for sending the tag name (from the UI) back to the UI on selection change
     if(selectedItem.name.indexOf('{')>-1){
             tagNameString = selectedItem.name.slice(selectedItem.name.indexOf('{')+1, selectedItem.name.indexOf('}'));
-    
             addedTagName[selectedItemID] = tagNameString;
             tagName = tagNameString;
     }
@@ -559,9 +562,7 @@ figma.ui.onmessage = message => {
         let key = message.nodeID;       // Getting the NodeId comming from ui.html file (Contains Current Slected Node id)
         let value = message.customInteractions; //Getting the classes parent from ui.html file
 
-
         let newVal = removeGarbageInteractions(value);
-
         addedCustomInteractions[key] = newVal;   // An obj that contains the mapping of (nodeID --> addedInteractions);
         cc = ``;    
 
