@@ -198,7 +198,7 @@ function addCustomCss(node){
                         if(node.name.includes('<')){
                             node.name += `!*${customCss}*!`;
                         }else{
-                            node.name += `<>!*${customCss}*!`
+                            node.name += `<>!*${customCss}*!`;
                         }
                     }else{
                         node.name += `[]<>!*${customCss}*!`;
