@@ -79,10 +79,6 @@ function checkForMaxWidth(width){
     return false;
 }
 
-// const getMaxWidth = (node) => {
-//     console.log(ma)
-// }
-
 function getWidth(node){
     let w = Math.round(node.width, 1);
     if(w>384){
