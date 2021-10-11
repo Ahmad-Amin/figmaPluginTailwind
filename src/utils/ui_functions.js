@@ -4,9 +4,9 @@ let changedBreakpoints = {
 let addedCustomClasses = {
     //map for plain normal classes -- keys -> {node ids}, values -> {added custom classes from the UI}
 } 
-let addedNewCustomCSS = {
+// let addedNewCustomCSS = {
     //map for plain normal classes -- keys -> {node ids}, values -> {added custom CSS from the UI}
-}
+// }
 let addedTagName = {
     //map for tag names -- keys -> {node ids}, values -> {added tag name from the UI}
 }
@@ -118,36 +118,36 @@ function addCustomClasses(node){
     } 
 }
 
-function addCustomInteractions(node){
-    const obj = iter(addedCustomInteractions, node);
-    const customInteractions = obj.classes;
-    const key = obj.key;
-    if(key){
-        if(!node.name.includes('<')){
-            if(node.name.includes('(')){
-                if(node.name.includes('[')){
-                    node.name += `<${customInteractions}>`;
-                }else{
-                    node.name += `[]<${customInteractions}>`;
-                }
-            }else{
-                node.name += `()[]<${customInteractions}>`
-            }
-        }else{
-            let nameArr = node.name.split('');
-            let cutCount = nameArr.slice(nameArr.indexOf('<')+1, nameArr.indexOf('>')).length;
-            nameArr.splice(nameArr.indexOf('<')+1, cutCount);
-            let convString = nameArr.join('').replace('>', `${customInteractions}>`);
-            node.name = convString;
-        }
-        return customInteractions;
-    }else{
-        if(!node.name.includes('<')){
-            node.name += ``;
-        }
-        return '';
-    }
-}
+// function addCustomInteractions(node){
+//     const obj = iter(addedCustomInteractions, node);
+//     const customInteractions = obj.classes;
+//     const key = obj.key;
+//     if(key){
+//         if(!node.name.includes('<')){
+//             if(node.name.includes('(')){
+//                 if(node.name.includes('[')){
+//                     node.name += `<${customInteractions}>`;
+//                 }else{
+//                     node.name += `[]<${customInteractions}>`;
+//                 }
+//             }else{
+//                 node.name += `()[]<${customInteractions}>`
+//             }
+//         }else{
+//             let nameArr = node.name.split('');
+//             let cutCount = nameArr.slice(nameArr.indexOf('<')+1, nameArr.indexOf('>')).length;
+//             nameArr.splice(nameArr.indexOf('<')+1, cutCount);
+//             let convString = nameArr.join('').replace('>', `${customInteractions}>`);
+//             node.name = convString;
+//         }
+//         return customInteractions;
+//     }else{
+//         if(!node.name.includes('<')){
+//             node.name += ``;
+//         }
+//         return '';
+//     }
+// }
 
 function addTagName(node){
     const obj = iter(addedTagName, node);
@@ -232,12 +232,12 @@ module.exports = {
     addBreakpointsClasses,
     addCustomClasses,
     addNewCustomCSS,
-    addCustomInteractions,
+    // addCustomInteractions,
     addTagName,
     iter,
     changedBreakpoints,
     addedCustomClasses,
-    addedNewCustomCSS,
+    // addedNewCustomCSS,
     addedCustomInteractions,
     addedTagName
 }

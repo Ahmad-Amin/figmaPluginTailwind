@@ -978,11 +978,12 @@
                 }
 
                 function addNewCustomCSSClasses(){
-                    let newClassesField = document.querySelector('.newCustomCSS_tab');
-                    let newCustomClasses = newClassesField.value ? newClassesField.value : '';
+                    console.log(document.querySelector('.newCustomCSS_tab'));
+                    // let newClassesField = document.querySelector('.newCustomCSS_tab');
+                    // let newCustomClasses = newClassesField.value ? newClassesField.value : '';
 
-                    let nodeID = document.querySelector('.node-id').value;
-                    parent.postMessage({pluginMessage: {category: 'newCustomCSS', nodeID, newCustomClasses} }, '*' );
+                    // let nodeID = document.querySelector('.node-id').value;
+                    // parent.postMessage({pluginMessage: {category: 'newCustomCSS', nodeID, newCustomClasses} }, '*' );
                 }
 
                 function addCustomInteractions() {
@@ -1185,7 +1186,7 @@
                     let customClasses = event.data.pluginMessage.customClasses;
                     let tagName = event.data.pluginMessage.tagName;
                     let customInteractions = event.data.pluginMessage.customInteractions;
-                    let customNewCss = event.data.pluginMessage.customNewCss;
+                    // let customNewCss = event.data.pluginMessage.customNewCss;
 
                     // code = code.replaceAll('<', '&lt'); 
                     // code = code.replaceAll('>', '&gt'); 
@@ -1231,13 +1232,13 @@
                     }
 
                     //Adding the Custom Styles
-                    if(customNewCss){
-                        document.querySelector('.newCustomCSS_tab').value = customNewCss ? customNewCss : '';
-                    }else{
-                        if(changeText){
-                            document.querySelector('.newCustomCSS_tab').value = '';
-                        }
-                    }
+                    // if(customNewCss){
+                    //     document.querySelector('.newCustomCSS_tab').value = customNewCss ? customNewCss : '';
+                    // }else{
+                    //     if(changeText){
+                    //         document.querySelector('.newCustomCSS_tab').value = '';
+                    //     }
+                    // }
 
                     //adding the tagname
                     if (tagName) {

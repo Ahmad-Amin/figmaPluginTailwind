@@ -10,11 +10,11 @@ const { getValues,
 const { addBreakpointsClasses,
         addCustomClasses,
         addNewCustomCSS,
-        addCustomInteractions,
+        // addCustomInteractions,
         addTagName, 
         iter,
         changedBreakpoints,
-        addedNewCustomCSS,
+        // addedNewCustomCSS,
         addedCustomClasses,
         addedCustomInteractions,
         addedTagName } = require('./utils/ui_functions');
@@ -110,8 +110,7 @@ function createTree(node, level){
                 //node is an image
     
                 classString = `${addCustomInteractions(node)} ${addBreakpointsClasses(node)} ${addCustomClasses(node)} ${getBoxShadow(node)}`;
-                styleString = `${addNewCustomCSS(node)}`;
-                cc+=`${indent}<img style='${styleString}' class='${removeGarbageValues(classString)}' src='https://via.placeholder.com/${imgW}x${imgH}'@ />\n`;
+                cc+=`${indent}<img class='${removeGarbageValues(classString)}' src='https://via.placeholder.com/${imgW}x${imgH}'@ />\n`;
             }
         }
 
@@ -125,8 +124,7 @@ function createTree(node, level){
         // }
 
         classString = `${addCustomInteractions(node)} ${addBreakpointsClasses(node)} ${addCustomClasses(node)} ${getWidth(node)} ${getHeight(node)} ${getBGColor(node)} ${flexString} ${getBorderWidthClass(node)} ${getBorderRadiusClass(node)} ${getSpacingFromParent(node)} ${getBoxShadow(node)}`;
-        styleString = `${addNewCustomCSS(node)}`;
-        cc += `${indent}<${addTagName(node)?addTagName(node):'div'} style='${styleString}' class='${removeGarbageValues(classString)}'>\n`; //${getLayout(node)}
+        cc += `${indent}<${addTagName(node)?addTagName(node):'div'} class='${removeGarbageValues(classString)}'>\n`; //${getLayout(node)}
         //${getPadding(node)}
         //getBGColor(node)} ${getFractionalWidth(node)}
  
@@ -167,8 +165,7 @@ function createTree(node, level){
                 let imgW = node.width;
                 //node is an image
                 classString = `${addCustomInteractions(node)} ${addBreakpointsClasses(node)} ${addCustomClasses(node)} ${getBoxShadow(node)}`;
-                styleString = `${addNewCustomCSS(node)}`
-                cc+=`${indent}<img style='${styleString}' class='${removeGarbageValues(classString)}' src='https://via.placeholder.com/${imgW}x${imgH}' />\n`;
+                cc+=`${indent}<img class='${removeGarbageValues(classString)}' src='https://via.placeholder.com/${imgW}x${imgH}' />\n`;
             }
         }
         // if(node.name.split('-')[1]=='img'){
@@ -183,27 +180,27 @@ function createTree(node, level){
             let bgIndent = indent.split('').splice(0, indent.length-1).join('');
 
             classString = `${addCustomInteractions(node)} ${addBreakpointsClasses(node)} ${addCustomClasses(node)} ${getBGColor(node)} ${getHeight(node)} ${getWidth(node)} ${getLayout(node)} ${getBorderWidthClass(node)} ${getBorderRadiusClass(node)} ${getSpacingFromParent(node)} ${getBoxShadow(node)}`;
-            styleString = `${addNewCustomCSS(node)}`
-            cc+=`${bgIndent}<${addTagName(node)?addTagName(node):'div'} style='${styleString}' class='${removeGarbageValues(classString)}'>\n`;
+            
+            cc+=`${bgIndent}<${addTagName(node)?addTagName(node):'div'} class='${removeGarbageValues(classString)}'>\n`;
             //${getPadding(node)} ${getBGColor(node)}
         }
          if(node.type == 'RECTANGLE'){
 
             classString = `${addCustomInteractions(node)} ${addBreakpointsClasses(node)} ${addCustomClasses(node)} ${getBGColor(node)} ${getWidth(node)} ${getHeight(node)} ${getLayout(node)} ${getBorderWidthClass(node)} ${getBorderRadiusClass(node)} ${getSpacingFromParent(node)} ${getBoxShadow(node)}`;
-            styleString = `${addNewCustomCSS(node)}`
-            cc+=`${indent}<${addTagName(node)?addTagName(node):'div'} style='${styleString}' class='${removeGarbageValues(classString)}'></div>\n`;
+           
+            cc+=`${indent}<${addTagName(node)?addTagName(node):'div'} class='${removeGarbageValues(classString)}'></div>\n`;
             //${getPadding(node)}
         }
          if(node.type == 'TEXT'){
             // cc+=`<p class=''>${node.characters?node.characters.split('\n').join('</br>'):''}</p>\n`;
             if(node.characters){
                 classString = `${addCustomInteractions(node)} ${addBreakpointsClasses(node)} ${addCustomClasses(node)} ${textClasses(node)} ${getSpacingFromParent(node)} ${getBoxShadow(node)}`;
-                styleString = `${addNewCustomCSS(node)}`
-                cc+=`${indent}<${addTagName(node)?addTagName(node):'p'} style='${styleString}' class=' ${removeGarbageValues(classString)}'>${node.characters.split('\n').join('&lt/br&gt')}</${addTagName(node)?addTagName(node):'p'}>\n`;
+                
+                cc+=`${indent}<${addTagName(node)?addTagName(node):'p'} class=' ${removeGarbageValues(classString)}'>${node.characters.split('\n').join('&lt/br&gt')}</${addTagName(node)?addTagName(node):'p'}>\n`;
             }else{
                 classString = `${addCustomInteractions(node)} ${addBreakpointsClasses(node)} ${addCustomClasses(node)} ${textClasses(node)} ${getSpacingFromParent(node)} ${getBoxShadow(node)}`;
-                styleString = `${addNewCustomCSS(node)}`
-                cc+=`${indent}<${addTagName(node)?addTagName(node):'p'} style='${styleString}' class='${removeGarbageValues(classString)}'></${addTagName(node)?addTagName(node):'p'}>\n`;
+      
+                cc+=`${indent}<${addTagName(node)?addTagName(node):'p'} class='${removeGarbageValues(classString)}'></${addTagName(node)?addTagName(node):'p'}>\n`;
             }
         }
     }
@@ -288,11 +285,11 @@ figma.on('run', () => {
             customClasses = customClassesString;
         }
 
-        if(el.name.indexOf('!*') > -1){
-            customNewCssString = el.name.slice(el.name.indexOf('!*')+2, el.name.indexOf('*!'));
-            addedNewCustomCSS[el.id] = customNewCssString;
-            customNewCss = customNewCssString;
-        }
+        // if(el.name.indexOf('!*') > -1){
+        //     customNewCssString = el.name.slice(el.name.indexOf('!*')+2, el.name.indexOf('*!'));
+        //     addedNewCustomCSS[el.id] = customNewCssString;
+        //     customNewCss = customNewCssString;
+        // }
 
         if(el.name.indexOf('<') > -1){
             customInteractionsString = el.name.slice(el.name.indexOf('<')+1, el.name.indexOf('>'));
@@ -369,14 +366,14 @@ figma.on('run', () => {
     }
 
     //for sending the added custom CSS (from the UI) back to the UI on selection change
-    if(selectedItem.name.indexOf('!*') > -1){
-        customNewCssString = selectedItem.name.slice(selectedItem.name.indexOf('!*')+2, selectedItem.name.indexOf('*!'));
-        addedNewCustomCSS[selectedItemID] = customNewCssString;
-        customNewCss = customNewCssString;
-    }else{
-        customNewCssObj = iter(addedNewCustomCSS, figma.currentPage.selection[0] ? figma.currentPage.selection[0]: {});
-        customNewCss = customNewCssObj.customNewCss;
-    }
+    // if(selectedItem.name.indexOf('!*') > -1){
+    //     customNewCssString = selectedItem.name.slice(selectedItem.name.indexOf('!*')+2, selectedItem.name.indexOf('*!'));
+    //     addedNewCustomCSS[selectedItemID] = customNewCssString;
+    //     customNewCss = customNewCssString;
+    // }else{
+    //     customNewCssObj = iter(addedNewCustomCSS, figma.currentPage.selection[0] ? figma.currentPage.selection[0]: {});
+    //     customNewCss = customNewCssObj.customNewCss;
+    // }
 
     //for sending the added custom Interactions (from the UI) back to the UI on selection change
     if(selectedItem.name.indexOf('<') > -1){
@@ -405,7 +402,7 @@ figma.on('run', () => {
         code = figmaToTailwind(page.children[0]);
     }
 
-    figma.ui.postMessage({code, selectedItemID, breakpoints, customClasses, tagName, customInteractions, customNewCss});
+    figma.ui.postMessage({code, selectedItemID, breakpoints, customClasses, tagName, customInteractions});
 })
 
 // selection change event listener --- the callback runs whenever we select something different from figma
@@ -487,14 +484,14 @@ figma.on('selectionchange', () => {
     }
 
     //for sending the added custom CSS as style (from the UI) back to the UI on selection change
-    if(selectedItemID.name.indexOf('!*') > -1){
-        customNewCssString = selectedItem.name.slice(selectedItem.name.indexOf('!*')+2, selectedItem.name.indexOf('*!'));
-        addedNewCustomCSS[selectedItemID] = customNewCssString;
-        customNewCss = customNewCssString;
-    }else{
-        customNewCssObj = iter(addedNewCustomCSS, figma.currentPage.selection[0] ? figma.currentPage.selection[0] : {});
-        customNewCss = customNewCssObj.customNewCss;
-    }
+    // if(selectedItemID.name.indexOf('!*') > -1){
+    //     customNewCssString = selectedItem.name.slice(selectedItem.name.indexOf('!*')+2, selectedItem.name.indexOf('*!'));
+    //     addedNewCustomCSS[selectedItemID] = customNewCssString;
+    //     customNewCss = customNewCssString;
+    // }else{
+    //     customNewCssObj = iter(addedNewCustomCSS, figma.currentPage.selection[0] ? figma.currentPage.selection[0] : {});
+    //     customNewCss = customNewCssObj.customNewCss;
+    // }
 
     //for sending the added custom Interactions (from the UI) back to the UI on selection change
     if(selectedItem.name.indexOf('<') > -1){
@@ -523,7 +520,7 @@ figma.on('selectionchange', () => {
         code = figmaToTailwind(page.children[0]);
     }
 
-    figma.ui.postMessage({code, selectedItemID, breakpoints, customClasses, tagName, customInteractions, customNewCss});
+    figma.ui.postMessage({code, selectedItemID, breakpoints, customClasses, tagName, customInteractions});
 })
 
 figma.showUI(__html__, {width: 648, height: 700, title:'Figma to Tailwind'});
@@ -559,19 +556,19 @@ figma.ui.onmessage = message => {
         let customClasses = customClassObj.classes;
         figma.ui.postMessage({code: changedCode, selectedItemID: key, customClasses})
     }
-    else if(message.category == 'newCustomCSS'){
-        let key = message.nodeID;
-        let value = message.newCustomClasses;
+    // else if(message.category == 'newCustomCSS'){
+    //     let key = message.nodeID;
+    //     let value = message.newCustomClasses;
 
-        addedNewCustomCSS[key] = value;
-        console.log(addedNewCustomCSS);
-        cc = ``;
+    //     addedNewCustomCSS[key] = value;
+    //     console.log(addedNewCustomCSS);
+    //     cc = ``;
 
-        let changedCode = figmaToTailwind(figma.currentPage.selection[0] ? figma.currentPage.selection[0] : figma.currentPage.children[0] );
-        let customCssObj = iter(addedNewCustomCSS, figma.currentPage.selection[0] ? figma.currentPage.selection[0] : {});
-        let customNewCss = customCssObj.classes;
-        figma.ui.postMessage({code: changedCode, selectedItemID: key, customNewCss})
-    }
+    //     let changedCode = figmaToTailwind(figma.currentPage.selection[0] ? figma.currentPage.selection[0] : figma.currentPage.children[0] );
+    //     let customCssObj = iter(addedNewCustomCSS, figma.currentPage.selection[0] ? figma.currentPage.selection[0] : {});
+    //     let customNewCss = customCssObj.classes;
+    //     figma.ui.postMessage({code: changedCode, selectedItemID: key, customNewCss})
+    // }
     else if(message.category == 'customInteractions'){
         let key = message.nodeID;       // Getting the NodeId comming from ui.html file (Contains Current Slected Node id)
         let value = message.customInteractions; //Getting the classes parent from ui.html file

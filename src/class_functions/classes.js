@@ -218,7 +218,6 @@ function getBoxShadow(node){
             let opacity = Math.round(eff.color.a * 100, 1)/100;
         
             shadowClassString = `${xOffset}_${yOffset}_${blur}_${spread}_${opacity}`;
-            console.log(shadowClassString)
 
             let howMuchClose = [];
             const ShadowKeys = Object.keys(boxShadowMap);
