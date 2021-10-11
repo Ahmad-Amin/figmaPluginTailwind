@@ -103,6 +103,18 @@ const colorMap = {
     '#831843':'pink-900',
    }
 
+   const maxWidthPixelToTailwind = {
+       '448': 'max-w-md',
+       '512': 'max-w-lg',
+       '576': 'max-w-xl',
+       '672': 'max-w-2xl',
+       '768': 'max-w-3xl',
+       '896': 'max-w-4xl',
+       '1024': 'max-w-5xl',
+       '1152': 'max-w-6xl',
+       '1280': 'max-w-7xl'
+   }
+
    const pixelToTailwind = {
     '0':'0',
     '1':'px',
@@ -255,6 +267,7 @@ const borderWidthMap = {
 
 module.exports = {
     colorMap,
+    maxWidthPixelToTailwind,
     pixelToTailwind,
     fontWeightMap,
     fontPixelToTailwind,

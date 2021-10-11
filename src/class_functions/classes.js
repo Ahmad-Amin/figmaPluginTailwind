@@ -1,6 +1,7 @@
 const  { colorMap,
     pixelToTailwind,
     fontPixelToTailwind,
+    maxWidthPixelToTailwind,
     fontWeightMap, 
     fractionalPixelHaystack } = require('../maps/maps');
 
@@ -29,11 +30,7 @@ const getFractionalWidth = (node) => {
     //---WIDTH---
     //only execute if the width/height > 384
     if(node.width<=384) return '';
-    // if(node.height<=384) return '';
-    //width of the parent
-    //width of the node
-    //starting position of the node
-    //ending position of the node
+
     let parentWidth, width, nodeStartWidth, nodeEndWidth, widthPercentage;
     // parentHeight, height, nodeStartHeight, nodeEndHeight, heightPercentage;
     if(node.parent){
@@ -44,44 +41,47 @@ const getFractionalWidth = (node) => {
     // height = node.height;
     //calculate the width and height percentage
     widthPercentage = ((width/parentWidth).toFixed(2)*100);
-    // heightPercentage = ((height/parentHeight).toFixed(2)*100);
-
-    // console.log('old perc w', widthPercentage);
-    // console.log('old perc h', heightPercentage);
 
     widthPercentage = fractionalPixelHaystack.reduce( (a, b) => {
         return Math.abs(a - widthPercentage) < Math.abs(b - widthPercentage) ? a : b;
     })
-    // heightPercentage = fractionalPixelHaystack.reduce( (a, b) => {
-    //     return Math.abs(a - heightPercentage) < Math.abs(b - heightPercentage) ? a : b;
-    // })
-
-    // console.log('new perc w', widthPercentage);
-    // console.log('new perc h', heightPercentage);
      
     widthPercentage += '%';
-    // heightPercentage += '%';
 
-    // console.log(width, parentWidth, widthPercentage);
-    // console.log(height, parentHeight, heightPercentage);
-
-    //calculate the margins TODO
     let string;
     if(pixelToTailwind[widthPercentage]){
         string = `w-${pixelToTailwind[widthPercentage]}`
     }
-    else {
-        string = 'w-full';
+    else{
+        let maxWidth = checkForMaxWidth(width);
+        if(maxWidth != false){
+            string = `${maxWidth}`;
+        }else{
+            string = 'w-full'
+        }
     }
-    // if(node.fills){
-    //     if(node.fills.length>0){
-    //         let bgColor = node.fills[0].color;
-    //         let bgColorString = JSON.stringify(bgColor);
-    //         string += ` bg-${colorMap[RGBToHex(bgColor)]}`;
-    //     }
-    // }
+
     return string;
 }
+
+function checkForMaxWidth(width){
+    let nodeWidth = width;
+    let valueDeviation = [];
+    // Checking the closest key from Max-width with respect to the width given;
+    if(width <= 1280){
+        let keysMaxWidth = Object.keys(maxWidthPixelToTailwind);
+        keysMaxWidth.map(val => {
+            valueDeviation.push(Math.abs(parseInt(val) - parseInt(nodeWidth)));
+        });
+        let finalIndex = valueDeviation.indexOf(Math.min(...valueDeviation));
+        return maxWidthPixelToTailwind[keysMaxWidth[finalIndex]];
+    }
+    return false;
+}
+
+// const getMaxWidth = (node) => {
+//     console.log(ma)
+// }
 
 function getWidth(node){
     let w = Math.round(node.width, 1);
@@ -92,7 +92,6 @@ function getWidth(node){
     }
     return ``;
 }
-
 
 function getHeight(node){
     let h = Math.round(node.height, 1);
@@ -157,12 +156,11 @@ function getMargin(node){
 function textClasses(node){
     // console.log(node.fills)
     let textColor;
-    let textColorString; 
+    let textColorString;
     if(node.fills.length>0){
         textColor = node.fills[0].color;//gives an RGB value
         textColorString = JSON.stringify(textColor);
-        // console.log(textColorString)
-    } 
+    }
 
     let fontSize = node.fontSize;
     let fontWeight;
@@ -218,8 +216,7 @@ function getBoxShadow(node){
             let opacity = Math.round(eff.color.a * 100, 1)/100;
         
             shadowClassString = `${xOffset}_${yOffset}_${blur}_${spread}_${opacity}`;
-            console.log(shadowClassString)
-
+    
             let howMuchClose = [];
             const ShadowKeys = Object.keys(boxShadowMap);
 
@@ -229,7 +226,7 @@ function getBoxShadow(node){
             })
 
             const finalIndex = howMuchClose.indexOf(Math.min(...howMuchClose));
-            shadowClass = shadowClass +" "+ boxShadowMap[ShadowKeys[finalIndex]];
+            shadowClass =  boxShadowMap[ShadowKeys[finalIndex]];
 
     })
     return shadowClass;

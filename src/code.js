@@ -18,11 +18,12 @@ const { addBreakpointsClasses,
         addedTagName } = require('./utils/ui_functions');
 
 const { getBorderRadiusClass,
-        getBorderWidthClass } = require('./class_functions/border');        
+        getBorderWidthClass,
+        getBorderColor } = require('./class_functions/border');        
 
 
 const { getBGColor,
-        getFractionalWidth,
+        // getFractionalWidth,
         getWidth,
         getHeight,
         getLayout,
@@ -100,7 +101,7 @@ function createTree(node, level){
         const flexString = getTailWindClasses(values);
 
         //if the thing is an image we use placeholder api for that
-        if(node.fills.length > 1){
+        if(node.fills.length >= 1){
             if(node.fills[0].type == "IMAGE"){
                 let imgH = node.height;
                 let imgW = node.width;
@@ -108,20 +109,11 @@ function createTree(node, level){
     
                 classString = `${addCustomInteractions(node)} ${addBreakpointsClasses(node)} ${addCustomClasses(node)} ${getBoxShadow(node)}`;
                 cc+=`${indent}<img class='${removeGarbageValues(classString)}' src='https://via.placeholder.com/${imgW}x${imgH}'@ />\n`;
-                return;
+            
             }
         }
 
-        // if(node.name.split('-')[1]=='img'){
-        //     let imgH = node.height;
-        //     let imgW = node.width;
-
-        //     classString = `${addCustomInteractions(node)} ${addBreakpointsClasses(node)} ${addCustomClasses(node)} ${getBoxShadow(node)}`;
-        //     cc+=`${indent}<img class='${removeGarbageValues(classString)}' src='https://via.placeholder.com/${imgW}x${imgH}'@ />\n`;
-        //     return;
-        // }
-
-        classString = `${addCustomInteractions(node)} ${addBreakpointsClasses(node)} ${addCustomClasses(node)} ${getWidth(node)} ${getHeight(node)} ${getBGColor(node)} ${flexString} ${getBorderWidthClass(node)} ${getBorderRadiusClass(node)} ${getSpacingFromParent(node)} ${getBoxShadow(node)}`;
+        classString = `${addCustomInteractions(node)} ${addBreakpointsClasses(node)} ${addCustomClasses(node)} ${getWidth(node)} ${getHeight(node)} ${getBGColor(node)} ${flexString} ${getBorderWidthClass(node)} ${getBorderColor(node)} ${getBorderRadiusClass(node)} ${getSpacingFromParent(node)} ${getBoxShadow(node)}`;
         cc += `${indent}<${addTagName(node)?addTagName(node):'div'} class='${removeGarbageValues(classString)}'>\n`; //${getLayout(node)}
         //${getPadding(node)}
         //getBGColor(node)} ${getFractionalWidth(node)}
@@ -158,7 +150,7 @@ function createTree(node, level){
     }
     else {
 
-        if(node.fills.length > 1){
+        if(node.fills.length >= 1){
             if(node.fills[0].type == "IMAGE"){
                 let imgH = node.height;
                 let imgW = node.width;
@@ -174,21 +166,21 @@ function createTree(node, level){
         //     classString = `${addCustomInteractions(node)} ${addBreakpointsClasses(node)} ${addCustomClasses(node)} ${getBoxShadow(node)}`;
         //     cc+=`${indent}<img class='${removeGarbageValues(classString)}' src='https://via.placeholder.com/${imgW}x${imgH}' />\n`;
         // }
-        //the node is either a text or a rect node
-        else if(node.type == 'RECTANGLE' && node.name.split('-')[1] == 'bg'){
+        //the node is either a text or a rectangular node
+        if(node.type == 'RECTANGLE' && node.name.split('-')[1] == 'bg'){
             let bgIndent = indent.split('').splice(0, indent.length-1).join('');
 
-            classString = `${addCustomInteractions(node)} ${addBreakpointsClasses(node)} ${addCustomClasses(node)} ${getBGColor(node)} ${getHeight(node)} ${getWidth(node)} ${getLayout(node)} ${getBorderWidthClass(node)} ${getBorderRadiusClass(node)} ${getSpacingFromParent(node)} ${getBoxShadow(node)}`;
+            classString = `${addCustomInteractions(node)} ${addBreakpointsClasses(node)} ${addCustomClasses(node)} ${getBGColor(node)} ${getHeight(node)} ${getWidth(node)} ${getLayout(node)} ${getBorderWidthClass(node)} ${getBorderColor(node)} ${getBorderRadiusClass(node)} ${getSpacingFromParent(node)} ${getBoxShadow(node)}`;
             cc+=`${bgIndent}<${addTagName(node)?addTagName(node):'div'} class='${removeGarbageValues(classString)}'>\n`;
             //${getPadding(node)} ${getBGColor(node)}
-        }else if(node.type == 'RECTANGLE'){
+        }
+        if(node.type == 'RECTANGLE'){
 
-            classString = `${addCustomInteractions(node)} ${addBreakpointsClasses(node)} ${addCustomClasses(node)} ${getBGColor(node)} ${getWidth(node)} ${getHeight(node)} ${getLayout(node)} ${getBorderWidthClass(node)} ${getBorderRadiusClass(node)} ${getSpacingFromParent(node)} ${getBoxShadow(node)}`;
+            classString = `${addCustomInteractions(node)} ${addBreakpointsClasses(node)} ${addCustomClasses(node)} ${getBGColor(node)} ${getWidth(node)} ${getHeight(node)} ${getLayout(node)} ${getBorderWidthClass(node)} ${getBorderColor(node)} ${getBorderRadiusClass(node)} ${getSpacingFromParent(node)} ${getBoxShadow(node)}`;
             cc+=`${indent}<${addTagName(node)?addTagName(node):'div'} class='${removeGarbageValues(classString)}'></div>\n`;
             //${getPadding(node)}
         }
-        else if(node.type == 'TEXT'){
-            // cc+=`<p class=''>${node.characters?node.characters.split('\n').join('</br>'):''}</p>\n`;
+        if(node.type == 'TEXT'){
             if(node.characters){
                 classString = `${addCustomInteractions(node)} ${addBreakpointsClasses(node)} ${addCustomClasses(node)} ${textClasses(node)} ${getSpacingFromParent(node)} ${getBoxShadow(node)}`;
                 cc+=`${indent}<${addTagName(node)?addTagName(node):'p'} class='${removeGarbageValues(classString)}'>${node.characters.split('\n').join('&lt/br&gt')}</${addTagName(node)?addTagName(node):'p'}>\n`;

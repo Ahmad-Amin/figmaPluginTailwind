@@ -1,4 +1,6 @@
-const { borderRadiusMap, borderWidthMap } = require('../maps/maps')
+const { borderRadiusMap, borderWidthMap } = require('../maps/maps');
+const {RGBToHex} = require('../utils/util_functions');
+const {colorMap} = require('../maps/maps');
 
 //border radius
 function getBorderRadiusClass(node){
@@ -22,17 +24,6 @@ function getBorderRadiusClass(node){
         }
         return `rounded${borderRadiusMap[topLeft]}`;
     }
-    // //Case 2: 2 of them are equal (2 pairs of equal radii -- adjacent)
-
-    //     //A: top 2 are equal 
-    //     //B: right 2 are equal
-    //     //C: bottom 2 are equal
-    //     //D: left 2 are equal
-    // //Case 3: 2 adjecent are equal -- remaining 2 are unique
-    // //Case 4: none of them are equal
-    // if(topLeft != topRight != bottomRight != bottomLeft){
-
-    // }
 
     return `border-tl${borderRadiusMap[topLeft]} border-tr${borderRadiusMap[topRight]} border-br${borderRadiusMap[bottomRight]} border-bl${borderRadiusMap[bottomLeft]}`;
 }
@@ -42,11 +33,19 @@ function getBorderWidthClass(node){
     //it lies in strokes
     if(!node.strokes || node.strokes.length == 0){
         return '';
-    } 
+    }
     return `border${borderWidthMap[node.strokeWeight]}`;
+}
+
+function getBorderColor(node){
+    if(node.strokes.length > 0){
+        let borderColor = node.strokes[0].color;
+        return `border-${colorMap[RGBToHex(borderColor)]}`;
+    }
 }
 
 module.exports = {
     getBorderRadiusClass,
-    getBorderWidthClass
+    getBorderWidthClass,
+    getBorderColor
 }
