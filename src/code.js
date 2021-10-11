@@ -9,11 +9,13 @@ const { getValues,
 
 const { addBreakpointsClasses,
         addCustomClasses,
+        addCustomCss,
         addCustomInteractions,
         addTagName, 
         iter,
         changedBreakpoints,
         addedCustomClasses,
+        addedCustomCss,
         addedCustomInteractions,
         addedTagName } = require('./utils/ui_functions');
 
@@ -93,6 +95,7 @@ function createTree(node, level){
 
     //**** */
     let classString = '';
+    let styleString = '';
 
     if(node.children){
         children = node.children;
@@ -108,13 +111,13 @@ function createTree(node, level){
                 //node is an image
     
                 classString = `${addCustomInteractions(node)} ${addBreakpointsClasses(node)} ${addCustomClasses(node)} ${getBoxShadow(node)}`;
-                cc+=`${indent}<img class='${removeGarbageValues(classString)}' src='https://via.placeholder.com/${imgW}x${imgH}'@ />\n`;
+                cc+=`${indent}<img style='${addCustomCss(node)}' class='${removeGarbageValues(classString)}' src='https://via.placeholder.com/${imgW}x${imgH}'@ />\n`;
             
             }
         }
 
         classString = `${addCustomInteractions(node)} ${addBreakpointsClasses(node)} ${addCustomClasses(node)} ${getWidth(node)} ${getHeight(node)} ${getBGColor(node)} ${flexString} ${getBorderWidthClass(node)} ${getBorderColor(node)} ${getBorderRadiusClass(node)} ${getSpacingFromParent(node)} ${getBoxShadow(node)}`;
-        cc += `${indent}<${addTagName(node)?addTagName(node):'div'} class='${removeGarbageValues(classString)}'>\n`; //${getLayout(node)}
+        cc += `${indent}<${addTagName(node)?addTagName(node):'div'} style='${addCustomCss(node)}' class='${removeGarbageValues(classString)}'>\n`; //${getLayout(node)}
         //${getPadding(node)}
         //getBGColor(node)} ${getFractionalWidth(node)}
  
@@ -156,7 +159,7 @@ function createTree(node, level){
                 let imgW = node.width;
                 //node is an image
                 classString = `${addCustomInteractions(node)} ${addBreakpointsClasses(node)} ${addCustomClasses(node)} ${getBoxShadow(node)}`;
-                cc+=`${indent}<img class='${removeGarbageValues(classString)}' src='https://via.placeholder.com/${imgW}x${imgH}' />\n`;
+                cc+=`${indent}<img style='${addCustomCss(node)}' class='${removeGarbageValues(classString)}' src='https://via.placeholder.com/${imgW}x${imgH}' />\n`;
             }
         }
         // if(node.name.split('-')[1]=='img'){
@@ -171,22 +174,22 @@ function createTree(node, level){
             let bgIndent = indent.split('').splice(0, indent.length-1).join('');
 
             classString = `${addCustomInteractions(node)} ${addBreakpointsClasses(node)} ${addCustomClasses(node)} ${getBGColor(node)} ${getHeight(node)} ${getWidth(node)} ${getLayout(node)} ${getBorderWidthClass(node)} ${getBorderColor(node)} ${getBorderRadiusClass(node)} ${getSpacingFromParent(node)} ${getBoxShadow(node)}`;
-            cc+=`${bgIndent}<${addTagName(node)?addTagName(node):'div'} class='${removeGarbageValues(classString)}'>\n`;
+            cc+=`${bgIndent}<${addTagName(node)?addTagName(node):'div'} style='${addCustomCss(node)}' class='${removeGarbageValues(classString)}'>\n`;
             //${getPadding(node)} ${getBGColor(node)}
         }
         if(node.type == 'RECTANGLE'){
 
             classString = `${addCustomInteractions(node)} ${addBreakpointsClasses(node)} ${addCustomClasses(node)} ${getBGColor(node)} ${getWidth(node)} ${getHeight(node)} ${getLayout(node)} ${getBorderWidthClass(node)} ${getBorderColor(node)} ${getBorderRadiusClass(node)} ${getSpacingFromParent(node)} ${getBoxShadow(node)}`;
-            cc+=`${indent}<${addTagName(node)?addTagName(node):'div'} class='${removeGarbageValues(classString)}'></div>\n`;
+            cc+=`${indent}<${addTagName(node)?addTagName(node):'div'} style='${addCustomCss(node)}' class='${removeGarbageValues(classString)}'></div>\n`;
             //${getPadding(node)}
         }
         if(node.type == 'TEXT'){
             if(node.characters){
                 classString = `${addCustomInteractions(node)} ${addBreakpointsClasses(node)} ${addCustomClasses(node)} ${textClasses(node)} ${getSpacingFromParent(node)} ${getBoxShadow(node)}`;
-                cc+=`${indent}<${addTagName(node)?addTagName(node):'p'} class='${removeGarbageValues(classString)}'>${node.characters.split('\n').join('&lt/br&gt')}</${addTagName(node)?addTagName(node):'p'}>\n`;
+                cc+=`${indent}<${addTagName(node)?addTagName(node):'p'} style='${addCustomCss(node)}' class='${removeGarbageValues(classString)}'>${node.characters.split('\n').join('&lt/br&gt')}</${addTagName(node)?addTagName(node):'p'}>\n`;
             }else{
                 classString = `${addCustomInteractions(node)} ${addBreakpointsClasses(node)} ${addCustomClasses(node)} ${textClasses(node)} ${getSpacingFromParent(node)} ${getBoxShadow(node)}`;
-                cc+=`${indent}<${addTagName(node)?addTagName(node):'p'} class='${removeGarbageValues(classString)}'></${addTagName(node)?addTagName(node):'p'}>\n`;
+                cc+=`${indent}<${addTagName(node)?addTagName(node):'p'} style='${addCustomCss(node)}' class='${removeGarbageValues(classString)}'></${addTagName(node)?addTagName(node):'p'}>\n`;
             }
         }
         return;
@@ -276,7 +279,11 @@ figma.on('run', () => {
             addedCustomInteractions[el.id] = customInteractionsString;
             customInteractions = customInteractionsString;
         }
-
+        if(el.name.indexOf('!*') > -1){
+            customCssString = el.name.slice(el.name.indexOf('!*')+2, el.name.indexOf('*!'));
+            addedCustomCss[el.id] = customCssString;
+            customCss = customCssString;
+        }
         if(el.name.indexOf('{')>-1){
             tagNameString = el.name.slice(el.name.indexOf('{')+1, el.name.indexOf('}'));
     
@@ -290,6 +297,7 @@ figma.on('run', () => {
     let customClassesString, customClasses, customClassesObj;
     let customInteractionsString, customInteractions, customInteractionsObj;
     let tagNameString, tagName, tagNameObj;
+    let customCssString, customCss, customCssObj;
 
     //for sending the breakpoints of the selected node to the UI
     if(selectedItem.name.indexOf('(')>-1){
@@ -342,6 +350,16 @@ figma.on('run', () => {
     else{
         customClassesObj = iter(addedCustomClasses, figma.currentPage.selection[0]?figma.currentPage.selection[0]:{})
         customClasses = customClassesObj.customClasses;   
+    }
+
+    //for sending the added custom css as styling (from the UI) back to the UI on selection change
+    if(selectedItem.name.indexOf('!*') > -1){
+        customCssString = selectedItem.name.slice(selectedItem.name.indexOf('!*')+2, selectedItem.name.indexOf('*1'));
+        addedCustomCss[selectedItemID] = customCssString;
+        customCss = customCssString;
+    }else{
+        customCssObj  =iter(addedCustomCss, figma.currentPage.selection[0] ? figma.currentPage.selection[0] : {});
+        customCss = customCssObj.customCss;
     }
 
     //for sending the added custom Interactions (from the UI) back to the UI on selection change
@@ -371,7 +389,7 @@ figma.on('run', () => {
         code = figmaToTailwind(page.children[0]);
     }
 
-    figma.ui.postMessage({code, selectedItemID, breakpoints, customClasses, tagName, customInteractions});
+    figma.ui.postMessage({code, selectedItemID, breakpoints, customClasses, tagName, customInteractions, customCss});
 })
 
 // selection change event listener --- the callback runs whenever we select something different from figma
@@ -396,6 +414,7 @@ figma.on('selectionchange', () => {
     // console.log('changed')
     let breakpointString, breakpointsObj, breakpoints;
     let customClassesString, customClasses, customClassesObj;
+    let customCssString, customCss, customCssObj;
     let customInteractionsString, customInteractions, customInteractionsObj;
     let tagNameString, tagName, tagNameObj;
 
@@ -451,6 +470,16 @@ figma.on('selectionchange', () => {
         customClasses = customClassesObj.customClasses;   
     }
 
+    //for sending the added custom Css styling (from the UI) back to the UI on selection change
+    if(selectedItem.name.indexOf('!*') > -1){
+        customCssString = selectedItem.name.slice(selectedItem.name.indexOf('!*')+2, selectedItem.name.indexOf('*!'));
+        addedCustomCss[selectedItemID] = customCssString;
+        customCss = customCssString;
+    }else{
+        customCssObj = iter(addedCustomCss, figma.currentPage.selection[0] ? figma.currentPage.selection[0] : {});
+        customCss = customCssObj.customCss;
+    }
+
     //for sending the added custom Interactions (from the UI) back to the UI on selection change
     if(selectedItem.name.indexOf('<') > -1){
         customInteractionsString = selectedItem.name.slice(selectedItem.name.indexOf('<') +1, selectedItem.name.indexOf('>'));
@@ -478,7 +507,7 @@ figma.on('selectionchange', () => {
         code = figmaToTailwind(page.children[0]);
     }
 
-    figma.ui.postMessage({code, selectedItemID, breakpoints, customClasses, tagName, customInteractions});
+    figma.ui.postMessage({code, selectedItemID, breakpoints, customClasses, tagName, customInteractions, customCss});
 })
 
 figma.showUI(__html__, {width: 648, height: 700, title:'Figma to Tailwind'});
@@ -513,6 +542,18 @@ figma.ui.onmessage = message => {
 
         let customClasses = customClassObj.classes;
         figma.ui.postMessage({code: changedCode, selectedItemID: key, customClasses})
+    }
+    else if(message.category == 'customCss'){
+        let key = message.nodeID;
+        let value = message.customCss;
+
+        addedCustomCss[key] = value;
+        console.log(addedCustomCss);
+
+        let changedCode = figmaToTailwind(figma.currentPage.selection[0]?figma.currentPage.selection[0]:figma.currentPage.children[0]);
+        let customCssObj = iter(addCustomCss, figma.currentPage.selection[0] ? figma.currentPage.selection[0]: {});
+        let customCss = customCssObj.classes;
+        figma.ui.postMessage({code: changedCode, selectedItemID:key, customCss});
     }
     else if(message.category == 'customInteractions'){
         let key = message.nodeID;       // Getting the NodeId comming from ui.html file (Contains Current Slected Node id)

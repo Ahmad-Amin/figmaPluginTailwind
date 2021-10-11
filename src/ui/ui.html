@@ -699,6 +699,11 @@ body{
             <option value="CustomCss">Custom CSS</option>
         </select>
         <textarea ID="info" type='text' data-size='sm' class="customCss_tab"></textarea>
+        <div class="b_buttons"> 
+            <button class="copy_button" onclick="addCustomCss()">
+                Update
+            </button>
+        </div>
     </div>
     <div style=" width:100px; height: 100px; background-color: white;"></div>
 </div>
@@ -880,7 +885,6 @@ function addBreakpoints(){
       let classesField = document.querySelector('.tuc_tab');
       let customClasses = classesField.value?classesField.value:'';
 
-
       let nodeID = document.querySelector('.node-id').value;
       parent.postMessage( {pluginMessage: {category: 'customClasses', nodeID, customClasses} }, '*');
     }
@@ -893,6 +897,13 @@ function addBreakpoints(){
         parent.postMessage({pluginMessage: {category: 'customInteractions', nodeID, customInteractions}}, '*');
     }
 
+    function addCustomCss(){
+        let cssField = document.querySelector('.customCss_tab');
+        let customCss = cssField.value ? cssField.value : '';
+
+        let nodeID = document.querySelector('.node-id').value;
+        parent.postMessage({pluginMessage: {category: 'customCss', nodeID, customCss} }, '*');
+    }
     function addTagName(){
       let tagName = document.querySelector('#text').value.trim();
 
@@ -1085,6 +1096,7 @@ function addBreakpoints(){
         let customClasses = event.data.pluginMessage.customClasses;
         let tagName = event.data.pluginMessage.tagName;
         let customInteractions = event.data.pluginMessage.customInteractions;
+        let customCss = event.data.pluginMessage.customCss;
         
         // code = code.replaceAll('<', '&lt'); 
         // code = code.replaceAll('>', '&gt'); 
@@ -1117,6 +1129,15 @@ function addBreakpoints(){
         }else{
           if(changeText){
             document.querySelector('.tuc_tab').value = '';
+          }
+        }
+
+        //if there is any customCss (inline-styles) are added;
+        if(customCss){
+          document.querySelector('.customCss_tab').value = customCss ? customCss : '';
+        }else{
+          if(changeText){
+            document.querySelector('.customCss_tab').value = '';
           }
         }
 

@@ -4,6 +4,9 @@ let changedBreakpoints = {
 let addedCustomClasses = {
     //map for plain normal classes -- keys -> {node ids}, values -> {added custom classes from the UI}
 } 
+let addedCustomCss = {
+    //map for the custom styling -- keys -> {node ids}, values => {added custom inline Css styling}
+}
 let addedTagName = {
     //map for tag names -- keys -> {node ids}, values -> {added tag name from the UI}
 }
@@ -182,14 +185,56 @@ function addTagName(node){
     }
 }
 
+
+function addCustomCss(node){
+    const obj = iter(addedCustomCss, node);
+    const customCss = obj.classes;
+    const key = obj.key;
+    if(key){
+        if(!node.name.includes('!*')){
+            if(node.name.includes('{')){
+                if(node.name.includes('(')){
+                    if(node.name.includes('[')){
+                        if(node.name.includes('<')){
+                            node.name += `!*${customCss}*!`;
+                        }else{
+                            node.name += `<>!*${customCss}*!`
+                        }
+                    }else{
+                        node.name += `[]<>!*${customCss}*!`;
+                    }
+                }else{
+                    node.name += `()[]<>!*${customCss}*!`;
+                }
+            }else{
+                node.name += `{}()[]<>!*${customCss}*!`;
+            }
+        }else{
+            let nameArr = node.name.split('');
+            let cutCount = nameArr.slice(nameArr.indexOf('!*')+2, nameArr.indexOf('*!')).length;
+            nameArr.splice(nameArr.indexOf('!*')+2, cutCount);
+            let convString = nameArr.join('').replace('*!', `${customCss}*!`);
+            node.name = convString;
+        }
+        return customCss;
+    }else{
+        if(!node.name.includes('!*')){
+            node.name += ``;
+        }
+        return '';
+    }
+}
+
 module.exports = {
     addBreakpointsClasses,
     addCustomClasses,
+    addCustomCss,
     addCustomInteractions,
     addTagName,
     iter,
     changedBreakpoints,
     addedCustomClasses,
+    addedCustomCss,
     addedCustomInteractions,
     addedTagName
 }
